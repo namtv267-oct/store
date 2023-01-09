@@ -1,7 +1,7 @@
 package com.store.security;
 
-import com.store.entities.Role;
-import com.store.entities.User;
+import com.store.entities.RoleE;
+import com.store.entities.UserE;
 import com.store.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,11 +23,44 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        UserE user = userRepository.findUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserDetails() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+               return user.getAuthorities().stream().map(role->new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+            }
+
+            @Override
+            public String getPassword() {
+                return user.getPassword();
+            }
+
+            @Override
+            public String getUsername() {
+                return user.getUsername();
+            }
+
+            @Override
+            public boolean isAccountNonExpired() {
+                return user.isAccountNonExpired();
+            }
+
+            @Override
+            public boolean isAccountNonLocked() {
+                return user.isAccountNonLocked();
+            }
+
+            @Override
+            public boolean isCredentialsNonExpired() {
+                return user.isCredentialsNonExpired();
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return user.isEnabled();
+            }
+        };
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
+
 }

@@ -5,19 +5,19 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "role")
-public class Role {
+@Table(name = "roles")
+public class RoleE {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public Role(String name) {
+    public RoleE(String name) {
         super();
         this.name = name;
     }
 
-    public Role() {
+    public RoleE() {
 
     }
 }

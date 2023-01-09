@@ -1,13 +1,9 @@
 package com.store.services;
 
 import com.store.dto.UserDto;
-import com.store.entities.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
-import java.util.Optional;
+import com.store.entities.UserE;
 
 public interface IUserService {
-    User save(UserDto userDto);
+    UserE save(UserDto userDto);
 
 }
